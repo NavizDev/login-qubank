@@ -41,6 +41,8 @@ function useProvideAuth() {
       });
   };
 
+  function isLogin() {}
+
   const signout = () => {
     return firebase
       .auth()

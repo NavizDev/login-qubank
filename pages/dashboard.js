@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/useAuthFirebase";
 
@@ -26,9 +27,11 @@ const dashboard = () => {
             Signout
           </button>
         </>
-      ) : typeof window !== "undefined" ? (
-        router.push("/login")
-      ) : null}
+      ) : (
+        <Link href="/login" passHref>
+          <a className="bg-blue-500 m-2 p-2">Ir a Login</a>
+        </Link>
+      )}
     </>
   );
 };
