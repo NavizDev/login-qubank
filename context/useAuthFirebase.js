@@ -7,6 +7,7 @@ if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
 
+let provider = new firebase.auth.GoogleAuthProvider();
 const authContext = createContext();
 
 export function ProvideAuth({ children }) {
@@ -20,6 +21,7 @@ export const useAuth = () => {
 
 function useProvideAuth() {
   const [user, setUser] = useState(null);
+  const [authenticated, setAuthenticated] = useState(false);
 
   const signin = (email, password) => {
     return firebase
@@ -31,6 +33,16 @@ function useProvideAuth() {
       });
   };
 
+  function singinGoogle() {
+    return firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(function (response) {
+        setUser(response.user);
+        return response.user;
+      });
+  }
+
   const signup = (email, password) => {
     return firebase
       .auth()
@@ -41,7 +53,17 @@ function useProvideAuth() {
       });
   };
 
-  function isLogin() {}
+  function isLogin() {
+    return firebase.auth.onAuthStateChanged(function (user) {
+      if (user) {
+        console.log("El usuario logueado es:", user);
+        setAuthenticated(true);
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
 
   const signout = () => {
     return firebase
@@ -53,6 +75,8 @@ function useProvideAuth() {
   };
 
   useEffect(() => {
+    console.log("EJecutando use effect");
+
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
@@ -69,5 +93,6 @@ function useProvideAuth() {
     signin,
     signup,
     signout,
+    singinGoogle,
   };
 }
