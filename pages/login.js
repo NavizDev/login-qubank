@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/useAuthFirebase";
 import { route } from "next/dist/next-server/server/router";
@@ -99,6 +100,10 @@ const login = () => {
               >
                 Login with Google
               </button>
+              <p>Not a member?</p>
+              <Link href="/register">
+                <a>Sign up now</a>
+              </Link>
             </div>
           </div>
         </div>

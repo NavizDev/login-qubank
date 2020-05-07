@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
-import firebase from "firebase/app";
+import firebase, { auth } from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from "../firebase/firebaseConfig";
 
@@ -21,7 +21,7 @@ export const useAuth = () => {
 
 function useProvideAuth() {
   const [user, setUser] = useState(null);
-  const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const signin = (email, password) => {
     return firebase
@@ -57,7 +57,6 @@ function useProvideAuth() {
     return firebase.auth.onAuthStateChanged(function (user) {
       if (user) {
         console.log("El usuario logueado es:", user);
-        setAuthenticated(true);
         return true;
       } else {
         return false;
@@ -75,13 +74,17 @@ function useProvideAuth() {
   };
 
   useEffect(() => {
-    console.log("EJecutando use effect");
-
+    console.log("EJecutando use effect", user);
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(false);
+      try {
+        if (user) {
+          setUser(user);
+          setLoading(true);
+        } else {
+          setUser(false);
+        }
+      } catch (error) {
+        console.log("ERROR ESPERADO", error);
       }
     });
     // Cleanup subscription on unmount
@@ -90,6 +93,7 @@ function useProvideAuth() {
 
   return {
     user,
+    loading,
     signin,
     signup,
     signout,
