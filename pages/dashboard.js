@@ -15,21 +15,22 @@ const dashboard = () => {
   };
 
   useEffect(() => {
-    if (!auth.loading) {
+    if (auth.user == false) {
       router.push("/login");
     }
-  }, [auth.user]);
+  }, [auth]);
 
   if (!auth.user) {
     //router.push("/login");
-    return (
-      <>
-        <p className="m-2">Usted no esta logueado.</p>
-        <Link href="/login" passHref>
-          <a className="bg-blue-500 m-2 p-2">Ir a Login</a>
-        </Link>
-      </>
-    );
+    return null;
+    // (
+    //   <>
+    //     <p className="m-2">Usted no esta logueado.</p>
+    //     <Link href="/login" passHref>
+    //       <a className="bg-blue-500 m-2 p-2">Ir a Login</a>
+    //     </Link>
+    //   </>
+    // );
   }
 
   return (
